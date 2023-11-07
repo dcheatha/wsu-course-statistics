@@ -2,15 +2,22 @@ import React, { useState, ChangeEvent } from 'react';
 import { CourseSearch } from '../data/models';
 import { fetchSearch } from '../data/dataFetch';
 import { CourseSearchTable } from './CourseSearchTable';
+import { size } from 'lodash';
 
-export function Navbar() {
+export interface NavbarProps
+{
+  setIsSearching: (isSearching: boolean) => void;
+}
+
+export function Navbar( props: NavbarProps ) {
   const [searchData, setSearchData] = useState<CourseSearch | null>(null);
   const [searchText, setSearchText] = useState<string>("");
 
   const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
-    let searchResults = await fetchSearch(e.target.value);
-    setSearchData(searchResults);
+    const text = e.target.value;
+    setSearchText(text);
+    props.setIsSearching(size(text) > 0)
+    setSearchData(await fetchSearch(text));
   };
 
   return (
