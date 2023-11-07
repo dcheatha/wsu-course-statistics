@@ -1,8 +1,8 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Root from "./Root";
-import { AllSubjectsTable } from "../components/AllSubjectsTable";
 import SubjectOverviewPage from "../pages/SubjectOverviewPage";
+import AllSubjectsPage from "../pages/AllSubjectsPage";
 
 export const router = createBrowserRouter([
   {
@@ -11,7 +11,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <AllSubjectsTable/>
+        element: <AllSubjectsPage/>
       },
       {
         path: "/subject/:subject",

@@ -5,19 +5,12 @@ import { fetchAllSubjects } from '../data/dataFetch';
 import { Subject } from '../data/models';
 import { Link } from 'react-router-dom';
 
-export function AllSubjectsTable() {
-  const [data, setData] = useState<Subjects | null>(null);
+export interface AllSubjectsProps {
+  data: Subjects | null;
+}
 
-  useEffect(() => {
-    async function fetchData() {
-      const subjects = await fetchAllSubjects();
-      setData(subjects);
-    }
-
-    fetchData();
-  }, []);
-
-  const rows = map(data?.items, (item) => <AllSubjectsRow subject={item} />);
+export function AllSubjectsTable( props: AllSubjectsProps ) {
+  const rows = map(props.data?.items, (item) => <AllSubjectsRow subject={item} />);
 
   return (
     <table className="table table-striped table-bordered">
