@@ -3,7 +3,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { Navbar } from './components/Navbar';
-import { SubjectsTable } from './components/SubjectsTable';
+import { AllSubjectsTable } from './components/SubjectsTable';
 
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
     <div>
       <Navbar/>
       <div className="container">
-        <SubjectsTable/>
+        <AllSubjectsTable/>
       </div>
     </div>
   );

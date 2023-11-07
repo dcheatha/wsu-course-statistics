@@ -30,7 +30,6 @@ export function Navbar() {
         </div>
       </nav>
 
-      Search Results (n = {searchData?.courses.length || 0})
 
       <CourseSearchTable data={searchData?.courses || []} />
     </>

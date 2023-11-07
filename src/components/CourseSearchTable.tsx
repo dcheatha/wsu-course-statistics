@@ -1,4 +1,4 @@
-import { map } from 'lodash';
+import { map, size } from 'lodash';
 import { CourseSearchItem } from '../data/models';
 
 
@@ -6,21 +6,29 @@ export function CourseSearchTable(props: { data: CourseSearchItem[]; }) {
   let rows = map(props.data, (item, index) => (
     <CourseSearchRow key={index} item={item} />
   ));
+  
+  if ( size( rows ) <= 0 ) {
+    return null;
+  }
 
   return (
-    <table className="table table-striped">
-      <thead>
-        <tr>
-          <th>Subject</th>
-          <th>Catalog Number</th>
-          <th>Title</th>
-          <th>Total Headcount</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows}
-      </tbody>
-    </table>
+    <div>
+      Search Results (n = {size( rows ) || 0})
+
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Catalog Number</th>
+            <th>Title</th>
+            <th>Total Headcount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

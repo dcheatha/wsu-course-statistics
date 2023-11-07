@@ -4,7 +4,7 @@ import { Subjects } from '../data/models';
 import { fetchSubjects } from '../data/dataFetch';
 import { Subject } from '../data/models';
 
-export function SubjectsTable() {
+export function AllSubjectsTable() {
   const [data, setData] = useState<Subjects | null>(null);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export function SubjectsTable() {
     fetchData();
   }, []);
 
-  const rows = map(data?.items, (item) => <SubjectRow subject={item} />);
+  const rows = map(data?.items, (item) => <AllSubjectsRow subject={item} />);
 
   return (
     <table className="table table-striped">
@@ -35,7 +35,7 @@ export function SubjectsTable() {
   );
 }
 
-export function SubjectRow(props: { subject: Subject; }) {
+export function AllSubjectsRow(props: { subject: Subject; }) {
   const { subject } = props;
 
   const dropRate = (subject.total_dropped || 0) / (subject.total_headcount || 1);
