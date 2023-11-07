@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Course, Courses } from "../data/models";
 import { fetchCourse } from "../data/dataFetch";
-import { map } from "lodash";
+import { first, map } from "lodash";
 
 export default function CourseOverviewPage()
 {
@@ -20,9 +20,10 @@ export default function CourseOverviewPage()
         fetchData();
     }, []);
 
+    const title = first(courseData?.courses)?.title || "Loading...";
 
     return <div>
-        <h1>{subject} {catalogNo}</h1>
+        <h1>{subject} {catalogNo} — {title}</h1>
         { courseData && <CourseTable data={courseData} />}
     </div>
 }
@@ -38,12 +39,8 @@ export function CourseTableRow(props: CourseTableRowProps) {
       <td>{course.year}</td>
       <td>{course.semester}</td>
       <td>{course.campus}</td>
-      <td>{course.academic_group}</td>
-      <td>{course.subject}</td>
-      <td>{course.catalog_no}</td>
       <td>{course.section}</td>
       <td>{course.course_no}</td>
-      <td>{course.title}</td>
       <td>{course.instructor || 'N/A'}</td>
       <td>{course.headcount}</td>
       <td>{course.dropped}</td>
@@ -64,12 +61,8 @@ export function CourseTable( props: CourseTableProps ) {
           <th>Year</th>
           <th>Semester</th>
           <th>Campus</th>
-          <th>Academic Group</th>
-          <th>Subject</th>
-          <th>Catalog No</th>
           <th>Section</th>
           <th>Course No</th>
-          <th>Title</th>
           <th>Instructor</th>
           <th>Headcount</th>
           <th>Dropped</th>
