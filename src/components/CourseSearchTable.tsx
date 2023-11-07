@@ -22,7 +22,9 @@ export function CourseSearchTable(props: { data: CourseSearchItem[]; }) {
       </tbody>
     </table>
   );
-}export function CourseSearchRow(props: { item: CourseSearchItem; }) {
+}
+
+export function CourseSearchRow(props: { item: CourseSearchItem; }) {
   return (
     <tr>
       <td>{props.item.subject}</td>

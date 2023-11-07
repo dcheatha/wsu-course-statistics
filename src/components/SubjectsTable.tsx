@@ -10,7 +10,6 @@ export function SubjectsTable() {
   useEffect(() => {
     async function fetchData() {
       const subjects = await fetchSubjects();
-      console.log(subjects);
       setData(subjects);
     }
 
@@ -34,7 +33,9 @@ export function SubjectsTable() {
       </tbody>
     </table>
   );
-}export function SubjectRow(props: { subject: Subject; }) {
+}
+
+export function SubjectRow(props: { subject: Subject; }) {
   const { subject } = props;
 
   const dropRate = (subject.total_dropped || 0) / (subject.total_headcount || 1);
