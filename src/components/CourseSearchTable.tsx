@@ -15,7 +15,7 @@ export function CourseSearchTable(props: { data: CourseSearchItem[]; }) {
     <div>
       Search Results (n = {size( rows ) || 0})
 
-      <table className="table table-striped">
+      <table className="table table-striped table-bordered">
         <thead>
           <tr>
             <th>Subject</th>

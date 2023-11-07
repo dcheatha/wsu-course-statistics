@@ -21,3 +21,14 @@ export interface Subjects {
   items: Subject[];
 }
 
+export interface SubjectCourses {
+  courses: SubjectCourse[];
+}
+
+export interface SubjectCourse {
+  catalog_no?: number;
+  titles?: string[];
+  total_headcount?: number;
+  total_dropped?: number;
+  campuses?: string[];
+}

@@ -20,7 +20,7 @@ export function AllSubjectsTable() {
   const rows = map(data?.items, (item) => <AllSubjectsRow subject={item} />);
 
   return (
-    <table className="table table-striped">
+    <table className="table table-striped table-bordered">
       <thead>
         <tr>
           <th scope="col">Subject</th>
