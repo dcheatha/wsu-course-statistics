@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { map, join, round } from 'lodash';
@@ -17,18 +17,96 @@ function App() {
 }
 
 function Navbar() {
+  const [searchData, setSearchData] = useState<CourseSearch | null>(null);
+  const [searchText, setSearchText] = useState<string>("");
+
+  const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+    let searchResults = await fetchSearch(e.target.value);
+    setSearchData(searchResults);
+  };
+
   return (
-    <nav className="navbar bg-body-tertiary">
-      <div className="container-fluid">
-        <a className="navbar-brand">Coug Courses</a>
-        <form className="d-flex" role="search">
-          <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-          <button className="btn btn-outline-success" type="submit">Search</button>
-        </form>
-      </div>
-    </nav>
+    <>
+      <nav className="navbar bg-body-tertiary">
+        <div className="container-fluid">
+          <a className="navbar-brand">Coug Courses</a>
+          <form className="d-flex" role="search">
+            <input 
+              className="form-control me-2" 
+              type="search" 
+              placeholder="Search" 
+              aria-label="Search" 
+              value={searchText}
+              onChange={handleInputChange}
+            />
+          </form>
+        </div>
+      </nav>
+
+      Search Results (n = {searchData?.courses.length || 0})
+
+      <CourseSearchTable data={searchData?.courses || []}/>
+    </>
   )
 }
+
+async function fetchSearch(text: String): Promise<CourseSearch | null> {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/search?search=${text}`);
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Error:', error);
+    return null;
+  }
+}
+
+interface CourseSearchItem {
+  subject: string;
+  catalog_no: number;
+  title?: string | null;
+  total_headcount?: number | null;
+}
+
+interface CourseSearch {
+  courses: CourseSearchItem[];
+}
+
+
+function CourseSearchRow(props: { item: CourseSearchItem }) {
+  return (
+    <tr>
+      <td>{props.item.subject}</td>
+      <td>{props.item.catalog_no}</td>
+      <td>{props.item.title || 'N/A'}</td>
+      <td>{props.item.total_headcount || 'N/A'}</td>
+    </tr>
+  );
+}
+
+function CourseSearchTable(props: { data: CourseSearchItem[] }) {
+  let rows = map(props.data, (item, index) => (
+    <CourseSearchRow key={index} item={item} />
+  ));
+
+  return (
+    <table className="table table-striped">
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Catalog Number</th>
+          <th>Title</th>
+          <th>Total Headcount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows}
+      </tbody>
+    </table>
+  );
+}
+
 
 function SubjectsTable() {
   const [data, setData] = useState<Subjects | null>(null);
