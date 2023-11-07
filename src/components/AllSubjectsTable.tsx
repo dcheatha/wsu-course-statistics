@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { join, map, round } from 'lodash';
 import { Subjects } from '../data/models';
-import { fetchSubjects } from '../data/dataFetch';
+import { fetchAllSubjects } from '../data/dataFetch';
 import { Subject } from '../data/models';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ export function AllSubjectsTable() {
 
   useEffect(() => {
     async function fetchData() {
-      const subjects = await fetchSubjects();
+      const subjects = await fetchAllSubjects();
       setData(subjects);
     }
 

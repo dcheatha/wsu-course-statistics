@@ -1,7 +1,7 @@
 import { CourseSearch, SubjectCourses } from './models';
 import { Subjects } from './models';
 
-export async function fetchSubjects(): Promise<Subjects | null> {
+export async function fetchAllSubjects(): Promise<Subjects | null> {
   try {
     const response = await fetch('http://127.0.0.1:8000/subject');
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);

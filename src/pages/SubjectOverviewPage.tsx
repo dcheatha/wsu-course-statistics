@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { fetchSubjectCourses, fetchSubjects } from '../data/dataFetch';
+import { fetchSubjectCourses, fetchAllSubjects } from '../data/dataFetch';
 import { SubjectCourse, SubjectCourses } from '../data/models';
 import _, { isNil, join, map } from 'lodash';
 
