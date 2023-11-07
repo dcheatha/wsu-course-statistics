@@ -26,6 +26,7 @@ export interface SubjectCourses {
 }
 
 export interface SubjectCourse {
+  subject: string,
   catalog_no?: number;
   titles?: string[];
   total_headcount?: number;

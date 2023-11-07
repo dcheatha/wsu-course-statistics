@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Root from "./Root";
 import SubjectOverviewPage from "../pages/SubjectOverviewPage";
 import AllSubjectsPage from "../pages/AllSubjectsPage";
+import CourseOverviewPage from "../pages/CourseOverviewPage";
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ export const router = createBrowserRouter([
       {
         path: "/subject/:subject",
         element: <SubjectOverviewPage/>
+      },
+      {
+        path: "/course/:subject/:catalogNo",
+        element: <CourseOverviewPage/>
       }
     ]
   },
