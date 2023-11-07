@@ -33,3 +33,23 @@ export interface SubjectCourse {
   total_dropped?: number;
   campuses?: string[];
 }
+
+export interface Courses {
+  courses: Course[];
+}
+
+export interface Course {
+  year: number;
+  semester: string;
+  campus: string;
+  academic_group: string;
+  subject: string;
+  catalog_no: number;
+  section: string;
+  course_no: number;
+  title: string;
+  instructor?: string | null;
+  headcount: number;
+  dropped: number;
+  meeting_times?: string | null;
+}
