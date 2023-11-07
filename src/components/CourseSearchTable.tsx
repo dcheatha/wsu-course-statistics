@@ -1,5 +1,6 @@
 import { map, size } from 'lodash';
 import { CourseSearchItem } from '../data/models';
+import { Link } from 'react-router-dom';
 
 
 export function CourseSearchTable(props: { data: CourseSearchItem[]; }) {
@@ -33,12 +34,25 @@ export function CourseSearchTable(props: { data: CourseSearchItem[]; }) {
 }
 
 export function CourseSearchRow(props: { item: CourseSearchItem; }) {
+  const { item } = props;
   return (
     <tr>
-      <td>{props.item.subject}</td>
-      <td>{props.item.catalog_no}</td>
-      <td>{props.item.title || 'N/A'}</td>
-      <td>{props.item.total_headcount || 'N/A'}</td>
+      <td>
+        <Link to={`/subject/${item.subject}`}>
+          {item.subject}
+        </Link>
+      </td>
+      <td>
+        <Link to={`/course/${item.subject}/${item.catalog_no}`}>
+          {item.catalog_no}
+        </Link>
+      </td>
+      <td>
+        <Link to={`/course/${item.subject}/${item.catalog_no}`}>
+          {item.title || 'N/A'}
+        </Link>
+      </td>
+      <td>{item.total_headcount || 'N/A'}</td>
     </tr>
   );
 }
