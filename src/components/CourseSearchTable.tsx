@@ -1,5 +1,5 @@
 import { map } from 'lodash';
-import { CourseSearchItem } from './models';
+import { CourseSearchItem } from '../data/models';
 
 
 export function CourseSearchTable(props: { data: CourseSearchItem[]; }) {

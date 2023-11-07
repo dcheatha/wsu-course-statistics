@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { join, map, round } from 'lodash';
-import { Subjects } from './models';
-import { fetchSubjects } from './dataFetch';
-import { Subject } from './models';
+import { Subjects } from '../data/models';
+import { fetchSubjects } from '../data/dataFetch';
+import { Subject } from '../data/models';
 
 export function SubjectsTable() {
   const [data, setData] = useState<Subjects | null>(null);

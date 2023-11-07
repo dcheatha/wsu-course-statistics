@@ -2,8 +2,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Navbar } from './Navbar';
-import { SubjectsTable } from './SubjectsTable';
+import { Navbar } from './components/Navbar';
+import { SubjectsTable } from './components/SubjectsTable';
 
 
 function App() {

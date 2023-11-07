@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent } from 'react';
-import { CourseSearch } from './models';
-import { fetchSearch } from './dataFetch';
+import { CourseSearch } from '../data/models';
+import { fetchSearch } from '../data/dataFetch';
 import { CourseSearchTable } from './CourseSearchTable';
 
 export function Navbar() {
