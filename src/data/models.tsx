@@ -36,6 +36,7 @@ export interface SubjectCourse {
 
 export interface Courses {
   courses: Course[];
+  stats: CourseStatistics;
 }
 
 export interface Course {
@@ -52,4 +53,27 @@ export interface Course {
   headcount: number;
   dropped: number;
   meeting_times?: string | null;
+}
+
+export interface CourseStatistics {
+  grades_by_instructor: CourseGradeByInstructorInfo[];
+  enrollment_by_instructor: CourseEnrollmentByInstructorInfo[];
+}
+
+export interface CourseGradeByInstructorInfo {
+  course_ids: number[];
+  year: number;
+  semester: string;
+  instructor: string | null;
+  headcount: number;
+  grade: number;
+}
+
+export interface CourseEnrollmentByInstructorInfo {
+  course_ids: number[];
+  year: number;
+  semester: string;
+  instructor: string | null;
+  total_headcount: number;
+  total_dropped: number;
 }
