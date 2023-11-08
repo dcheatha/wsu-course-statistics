@@ -10,6 +10,7 @@ import _ from "lodash";
 import { max, mean, median, min, standardDeviation } from "simple-statistics";
 import { ResponsiveStream } from "@nivo/stream";
 import { PaginationControl } from "react-bootstrap-pagination-control";
+import { ResponsiveBar } from "@nivo/bar";
 
 
 export default function CourseOverviewPage()
@@ -80,7 +81,7 @@ function CourseDataInstructorLimiter( courseData: Courses | null, page: number )
 {
     const instructors = uniq(map( courseData?.courses, (course) => course.instructor || 'Unknown'))
 
-    if ( size( instructors ) <= 10 || isNil(courseData) ) {
+    if ( size( instructors ) <= 8 || isNil(courseData) ) {
         return {
             courseData,
             pages: [],
@@ -174,6 +175,7 @@ export function PopulationSteamChart( props: { data: Courses | null })
       if (isNil(courseData.instructor)) { return {} }
 
       return {
+        term,
         [courseData.instructor]: size(grades) 
       }
     } )
@@ -188,18 +190,20 @@ export function PopulationSteamChart( props: { data: Courses | null })
 
 
   const margin = 35;
-  return <div style={{ width: '100%', height: 400 }}><ResponsiveStream
+  return <div style={{ width: '100%', height: 400 }}><ResponsiveBar
   theme={theme}
   margin={{ top: margin, right: 160, bottom: margin, left: margin }}
   data={mergedData}
+  indexBy={'term'}
+  groupMode="grouped"
   keys={instructors}
   enableGridX={true}
   enableGridY={false}
-  fillOpacity={0.9}
+//   fillOpacity={0.9}
   borderColor={{ theme: 'background' }}
-  offsetType="diverging"
-  order="descending"
-  curve="basis"
+//   offsetType="diverging"
+//   order="descending"
+//   curve="basis"
   axisTop={null}
   axisLeft={{
     tickSize: 5,
@@ -210,6 +214,7 @@ export function PopulationSteamChart( props: { data: Courses | null })
 }}
   legends={[
     {
+        dataFrom: 'keys',
         anchor: 'right',
         direction: 'column',
         justify: false,
