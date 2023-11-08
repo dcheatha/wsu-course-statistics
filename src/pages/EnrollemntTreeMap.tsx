@@ -15,11 +15,14 @@ export function EnrollemntTreeMap(props: EnrollmentTreeMapProps) {
   const chartData = { id: 'WSU', children: props.data };
 
   const minValueToDisplay = size(chartData.children) > 0 ? quantile(map(chartData.children, 'value'), 0.25) : 0;
-  const sumOfValuesTooSmallToDisplay = sum(map(reject(chartData.children, (item) => item.value > minValueToDisplay), 'value'));
+
+  const valuesTooSmallToDisplay = map(reject(chartData.children, (item) => item.value > minValueToDisplay), 'value');
+  const sumOfValuesTooSmallToDisplay = sum(valuesTooSmallToDisplay);
+  const numOfValuesTooSmallToDisplay = size(valuesTooSmallToDisplay);
 
   chartData.children = filter(chartData.children, (item) => item.value > minValueToDisplay);
 
-  const otherId = 'Other';
+  const otherId = `${numOfValuesTooSmallToDisplay} more items`;
   chartData.children.push({ id: otherId, value: sumOfValuesTooSmallToDisplay });
 
   return <ResponsiveTreeMap
@@ -29,8 +32,18 @@ export function EnrollemntTreeMap(props: EnrollmentTreeMapProps) {
     label={(node) => `${node.id}`}
     valueFormat={" >-.2s"}
     tile="binary"
-    nodeOpacity={1}
+    nodeOpacity={0.9}
+    labelTextColor={{
+      from: 'color',
+      modifiers: [
+          [
+              'darker',
+              3
+          ]
+      ]
+    }}
     leavesOnly={true}
+    labelSkipSize={40}
     innerPadding={2}
     borderWidth={0}
     onClick={({ id }) => {

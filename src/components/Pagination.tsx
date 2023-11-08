@@ -19,8 +19,8 @@ export function Pagination(props: PaginationProps) {
         </li>;
     });
 
-    return <nav>
-        <ul className="pagination justify-content-center">
+    return <nav className="align-middle">
+        <ul className="pagination m-0">
             {pagenationPages}
         </ul>
     </nav>;

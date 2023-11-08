@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { AllSubjectsTable } from "../components/AllSubjectsTable";
 import { fetchAllSubjects } from "../data/dataFetch";
 import { Subjects } from "../data/models";
-import { map } from "lodash";
+import { map, size } from "lodash";
 import { ResponsivePie } from "@nivo/pie";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { EnrollemntTreeMap } from "./EnrollemntTreeMap";
@@ -37,10 +37,13 @@ export default function AllSubjectsPage()
   const enrollmentTreeMap = <EnrollemntTreeMap data={treeMapData} onClick={onClickTreeMap} />
 
     return <div>
-        <h1>All Subjects</h1>
+        <h2>Enrollment-Based Subject TreeMap</h2>
         <div style={{ width: '100%', height: 600 }}>
           {enrollmentTreeMap}
         </div>
+
+        <br/>
+        <h2>Subjects (n={size(allSubjectsData?.items)})</h2>
         <AllSubjectsTable data={allSubjectsData}/>
     </div>
 }
