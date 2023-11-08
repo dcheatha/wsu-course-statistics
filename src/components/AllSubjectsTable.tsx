@@ -19,6 +19,8 @@ export function AllSubjectsTable( props: AllSubjectsProps ) {
         <tr>
           <th scope="col">Subject</th>
           <th scope="col"># of Courses Offered</th>
+          <th scope="col">Headcount</th>
+          <th scope="col">Dropped</th>
           <th scope="col">Course Drop Rate</th>
           <th scope="col">Campuses</th>
         </tr>
@@ -41,6 +43,8 @@ export function AllSubjectsRow(props: { subject: Subject; }) {
         </Link>
       </td>
       <td>{subject.courses_offered}</td>
+      <td>{subject.total_headcount}</td>
+      <td>{subject.total_dropped}</td>
       <td>{dropRate(subject.total_headcount, subject.total_dropped)}</td>
       <td>{join(subject.campuses, ", ")}</td>
     </tr>
