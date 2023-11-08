@@ -4,6 +4,7 @@ import { Course, Courses } from "../data/models";
 import { fetchCourse } from "../data/dataFetch";
 import { first, map } from "lodash";
 import { dropRate } from "../util";
+import Breadcrumbs from "../components/Breadcrumbs";
 
 export default function CourseOverviewPage()
 {
@@ -24,6 +25,7 @@ export default function CourseOverviewPage()
     const title = first(courseData?.courses)?.title || "Loading...";
 
     return <div>
+        <Breadcrumbs subject={subject} catalogNo={catalogNo}/>
         <h1>{subject} {catalogNo} — {title}</h1>
         { courseData && <CourseTable data={courseData} />}
     </div>

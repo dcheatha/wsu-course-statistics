@@ -4,6 +4,7 @@ import { fetchSubjectCourses, fetchAllSubjects } from '../data/dataFetch';
 import { SubjectCourses } from '../data/models';
 import _ from 'lodash';
 import { SubjectCoursesTable } from '../components/SubjectCoursesTable';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 export default function SubjectOverviewPage()
 {
@@ -22,6 +23,7 @@ export default function SubjectOverviewPage()
 
     return (
         <div>
+            <Breadcrumbs subject={subject}/>
             <h1>
                 Overview for Subject {subject}
             </h1>
