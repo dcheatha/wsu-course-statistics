@@ -4,6 +4,7 @@ import { Subjects } from '../data/models';
 import { fetchAllSubjects } from '../data/dataFetch';
 import { Subject } from '../data/models';
 import { Link } from 'react-router-dom';
+import { dropRate } from '../util';
 
 export interface AllSubjectsProps {
   data: Subjects | null;
@@ -32,9 +33,6 @@ export function AllSubjectsTable( props: AllSubjectsProps ) {
 export function AllSubjectsRow(props: { subject: Subject; }) {
   const { subject } = props;
 
-  const dropRate = (subject.total_dropped || 0) / (subject.total_headcount || 1);
-  const roundedDropRate = round(dropRate * 100, 2);
-
   return (
     <tr>
       <td>
@@ -43,7 +41,7 @@ export function AllSubjectsRow(props: { subject: Subject; }) {
         </Link>
       </td>
       <td>{subject.courses_offered}</td>
-      <td>{roundedDropRate}%</td>
+      <td>{dropRate(subject.total_headcount, subject.total_dropped)}</td>
       <td>{join(subject.campuses, ", ")}</td>
     </tr>
   );

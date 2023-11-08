@@ -1,6 +1,7 @@
 import { isNil, join, map } from 'lodash';
 import { SubjectCourse, SubjectCourses } from '../data/models';
 import { Link } from 'react-router-dom';
+import { dropRate } from '../util';
 
 export interface SubjectCoursesTableProps {
     data: SubjectCourses | null;
@@ -19,6 +20,7 @@ export function SubjectCoursesTable(props: SubjectCoursesTableProps) {
                     <th>Title(s)</th>
                     <th>Total Headcount</th>
                     <th>Total Dropped</th>
+                    <th>Drop Rate</th>
                     <th>Campuses</th>
                 </tr>
             </thead>
@@ -47,6 +49,7 @@ export function SubjectCoursesRow(props: { course: SubjectCourse; }) {
             </td>
             <td>{course.total_headcount}</td>
             <td>{course.total_dropped}</td>
+            <td>{dropRate(course.total_headcount, course.total_dropped)}</td>
             <td>{join(course.campuses, ', ')}</td>
         </tr>
     );

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Course, Courses } from "../data/models";
 import { fetchCourse } from "../data/dataFetch";
 import { first, map } from "lodash";
+import { dropRate } from "../util";
 
 export default function CourseOverviewPage()
 {
@@ -44,6 +45,7 @@ export function CourseTableRow(props: CourseTableRowProps) {
       <td>{course.instructor || 'N/A'}</td>
       <td>{course.headcount}</td>
       <td>{course.dropped}</td>
+      <td>{dropRate(course.headcount, course.dropped)}</td>
       <td>{course.meeting_times || 'N/A'}</td>
     </tr>
 }
@@ -66,6 +68,7 @@ export function CourseTable( props: CourseTableProps ) {
           <th>Instructor</th>
           <th>Headcount</th>
           <th>Dropped</th>
+          <th>Drop Rate</th>
           <th>Meeting Times</th>
         </tr>
       </thead>
