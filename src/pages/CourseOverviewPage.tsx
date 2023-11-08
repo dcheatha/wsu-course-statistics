@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Course, CourseEnrollmentByInstructorInfo, Courses } from "../data/models";
 import { fetchCourse } from "../data/dataFetch";
-import { Dictionary, chain, first, flatten, flattenDeep, forEach, groupBy, has, isNil, map, reduce, repeat, reverse, round, size, some, sortBy, times, truncate, union, uniq } from "lodash";
+import { Dictionary, chain, find, first, flatten, flattenDeep, forEach, fromPairs, groupBy, has, isNil, map, mapValues, merge, reduce, repeat, reverse, round, size, some, sortBy, times, truncate, union, uniq } from "lodash";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { CourseTable } from "../components/CourseTable";
 import { ResponsiveBoxPlot } from '@nivo/boxplot'
 import _ from "lodash";
 import { max, mean, median, min, standardDeviation } from "simple-statistics";
+import { ResponsiveStream } from "@nivo/stream";
 
 
 export default function CourseOverviewPage()
@@ -33,14 +34,51 @@ export default function CourseOverviewPage()
         <h1>{subject} {catalogNo} — {title}</h1>
 
         <h2>Stats</h2>
-        <h3>Grade Distrubution</h3>
-        <div className="gradeBoxPlot">
-          <GradesBoxPlot data={courseData}/>
-        </div>
+
+        <Tabs tabs={[
+          {
+            name: 'Grade Distrubution',
+            component: <GradesBoxPlot data={courseData}/>,
+          },
+          {
+            name: 'Drop Rate',
+            component: <div>Todo</div>,
+          },
+          {
+            name: 'Instructor Allocation',
+            component: <PopulationSteamChart data={courseData}/>,
+          }
+        ]} />
 
         <h2>All Known Historical Offerings</h2>
         { courseData && <CourseTable data={courseData} />}
     </div>
+}
+
+export interface Tab
+{
+  name: string,
+  component: JSX.Element,
+}
+
+export function Tabs( props: { tabs: Tab[] }) 
+{
+  const { tabs } = props;
+  const [active, setActive] = useState(first(tabs)?.name);
+
+  const renderedTabs = map( tabs, ( tab ) => <li key={tab.name} className="nav-item" onClick={() => { setActive( tab.name )}}>
+    <a className={"nav-link " + (tab.name === active ? "active" : "")} aria-current="page">{tab.name}</a>
+  </li>
+  )
+
+  const foundTab = find(tabs, (tab) => tab.name == active);
+
+  return <div>
+    <ul className="nav justify-content-center nav-underline">
+      {renderedTabs}
+    </ul>
+    {foundTab && foundTab.component}
+  </div>
 }
 
 function groupGrades(data: Courses | null)
@@ -73,6 +111,81 @@ function groupGrades(data: Courses | null)
   .value();
 }
 
+export function PopulationSteamChart( props: { data: Courses | null })
+{
+  const instructors = uniq(map( props.data?.courses, (course) => course.instructor || 'Unknown'))
+
+  let data = map( groupGrades(props.data), (termData, term) => {
+    return map( termData, (courseData) => { 
+      // @ts-ignore
+      const grades = courseData && courseData.grades || [];
+
+      if (isNil(courseData.instructor)) { return {} }
+
+      return {
+        [courseData.instructor]: size(grades) 
+      }
+    } )
+  });
+
+  const defaults = fromPairs(map(instructors, (str) => [str, 0]));
+  console.log(defaults)
+  const mergedData = map( data, (datum) => merge({}, ...[defaults, ...datum]))
+
+  console.log(mergedData)
+
+
+
+  const margin = 35;
+  return <div style={{ width: '100%', height: 400 }}><ResponsiveStream
+  theme={theme}
+  margin={{ top: margin, right: 160, bottom: margin, left: margin }}
+  data={mergedData}
+  keys={instructors}
+  enableGridX={true}
+  enableGridY={false}
+  fillOpacity={0.9}
+  borderColor={{ theme: 'background' }}
+  offsetType="diverging"
+  order="descending"
+  curve="basis"
+  axisTop={null}
+  axisLeft={{
+    tickSize: 5,
+    tickPadding: 5,
+    tickRotation: 0,
+    legend: '',
+    legendOffset: -40
+}}
+  legends={[
+    {
+        anchor: 'right',
+        direction: 'column',
+        justify: false,
+        translateX: 100,
+        translateY: 0,
+        itemWidth: 60,
+        itemHeight: 20,
+        itemsSpacing: 3,
+        itemTextColor: '#ffffff',
+        itemDirection: 'left-to-right',
+        symbolSize: 20,
+        symbolShape: 'square',
+        effects: [
+            {
+                on: 'hover',
+                style: {
+                    itemTextColor: '#ffffff'
+                }
+            }
+        ]
+    }
+]}
+/>
+</div>
+}
+
+
 export function GradesBoxPlot( props: { data: Courses | null })
 {
   const statted = flattenDeep(map(groupGrades(props.data), (termData, term) => {
@@ -99,7 +212,7 @@ export function GradesBoxPlot( props: { data: Courses | null })
     })
   }));
 
-  const margin = 25;
+  const margin = 35;
 
   return <div style={{ width: '100%', height: 400 }}>
     <ResponsiveBoxPlot
