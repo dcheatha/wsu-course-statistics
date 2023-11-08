@@ -3,6 +3,7 @@ import { CourseSearch } from '../data/models';
 import { fetchSearch } from '../data/dataFetch';
 import { CourseSearchTable } from './CourseSearchTable';
 import { size } from 'lodash';
+import logo from '../logo.png'
 
 export interface NavbarProps
 {
@@ -22,9 +23,16 @@ export function Navbar( props: NavbarProps ) {
 
   return (
     <>
-      <nav className="navbar bg-body-tertiary">
+      <nav className="navbar" style={{'backgroundColor': '#A60F2D'}}>
         <div className="container-fluid">
-          <a className="navbar-brand">Coug Courses</a>
+        <a className="navbar-brand" href="#">
+          <img 
+            src={logo} 
+            alt="Logo" width="24" height="24" 
+            className="d-inline-block align-content-middle"
+           />
+           &nbsp;&nbsp;Cougar Courses
+        </a>
           <form className="d-flex" role="search">
             <input
               className="form-control me-2"

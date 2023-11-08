@@ -39,19 +39,24 @@ export default function SubjectOverviewPage()
 
     return (
         <div>
-            <h2 className='my-3'>
-                {subject}
-            </h2>
-            <Breadcrumbs subject={subject}/>
+          <div className="row shadow-sm py-3 bg-black rounded-bottom">
+            <div className="col">
+              <h2>{subject}</h2>
+              <Breadcrumbs subject={subject}/>
+            </div>
+          </div>
 
-            <h2>Enrollment-Based Course TreeMap</h2>
+          <div className="row shadow-sm bg-black rounded-bottom">
             <div style={{ width: '100%', height: 600 }}>
                 {enrollmentTreeMap}
             </div>
+        </div>
 
+        <div className="row pt-3 bg-dark-subtle">
             <br/>
             <h2>Courses (n={size(subjectCourseData?.courses)})</h2>
             <SubjectCoursesTable data={subjectCourseData}/>
+        </div>
         </div>
     )
 }

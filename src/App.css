@@ -1,0 +1,61 @@
+.pagination > li > a
+{
+    color: white;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    color: white;
+    background-color: #A60F2D;
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color: #A60F2D !Important;
+    border: solid 1px #A60F2D !Important;
+}
+
+.pagination > .active > a:hover
+{
+    background-color: #A60F2D !Important;
+    border: solid 1px #A60F2D;
+}
+
+.nav-link {
+    color: white;
+    border: solid 1px #4D4D4D !Important;
+}
+  
+.nav-link:hover {
+    color: white;
+    background-color: #4D4D4D !Important;
+    border: solid 1px #4D4D4D !Important;
+}
+
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: white;
+    background-color: #A60F2D !Important;
+    border: solid 1px #A60F2D !Important;
+}
+
+.nav-tabs {
+    border-bottom: #A60F2D solid;
+    cursor: pointer;
+}
+
+a {
+    color: #A60F2D;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+
+a:hover {
+    display: inline-block;
+    text-decoration: underline;
+}

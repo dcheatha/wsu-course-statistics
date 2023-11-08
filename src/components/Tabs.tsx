@@ -10,7 +10,7 @@ export function Tabs(props: { tabs: Tab[]; }) {
     const { tabs } = props;
     const [active, setActive] = useState(first(tabs)?.name);
 
-    const renderedTabs = map(tabs, (tab) => <li key={tab.name} className="nav-item" onClick={() => { setActive(tab.name); }}>
+    const renderedTabs = map(tabs, (tab) => <li key={tab.name} className="nav-item bs-danger" onClick={() => { setActive(tab.name); }}>
         <a className={"nav-link " + (tab.name === active ? "active" : "")} aria-current="page">{tab.name}</a>
     </li>
     );
@@ -18,7 +18,7 @@ export function Tabs(props: { tabs: Tab[]; }) {
     const foundTab = find(tabs, (tab) => tab.name == active);
 
     return <div>
-        <ul className="nav justify-content-center nav-underline">
+        <ul className="nav nav-tabs">
             {renderedTabs}
         </ul>
         {foundTab && foundTab.component}
