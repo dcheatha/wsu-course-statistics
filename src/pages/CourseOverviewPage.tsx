@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Course, CourseEnrollmentByInstructorInfo, Courses } from "../data/models";
 import { fetchCourse } from "../data/dataFetch";
-import { Dictionary, first, forEach, groupBy, isNil, map, reverse, round, size, sortBy, union } from "lodash";
+import { Dictionary, first, forEach, groupBy, has, isNil, map, reverse, round, size, some, sortBy, union, uniq } from "lodash";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { CourseTable } from "../components/CourseTable";
 import { ResponsiveBump } from "@nivo/bump";
@@ -41,7 +41,7 @@ export default function CourseOverviewPage()
 export function DropRateBump( props: { data: Courses | null })
 {
    const data = computeDropRateBumpData(props.data);
-   return <div style={{width: "100%", height: 50 * size(data)}}>
+   return <div style={{width: "100%", height: 200 + 50 * size(data)}}>
     <ResponsiveBump
         theme={theme}
         data={data}
@@ -60,7 +60,7 @@ export function DropRateBump( props: { data: Courses | null })
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: 'Percent Dropped',
+          legend: 'Drop Rate',
           legendPosition: 'middle',
           legendOffset: -40,
           format: '.00%',
@@ -80,10 +80,12 @@ interface EnrollmentBumpData {
 function computeDropRateBumpData(coursedata: Courses | null) {
   const groupedByInstructor = groupEnrollmentByInstructor(coursedata);
 
+  const offeredTimes = uniq(map(coursedata?.courses, (course) => `${course.year}-${course.semester}`));
+
   const data = map(groupedByInstructor, (instructorData, instructor) => {
     return {
       id: instructor,
-      data: computeDropRateBumpDataForInstructor(instructorData)
+      data: computeDropRateBumpDataForInstructor(offeredTimes, instructorData)
     }
   });
 
@@ -92,8 +94,8 @@ function computeDropRateBumpData(coursedata: Courses | null) {
 }
 
 
-function computeDropRateBumpDataForInstructor(instructorData: Record<string, EnrollmentBumpData>) {
-  let data = map(instructorData, (yearSemesterData, yearSemester) => {
+function computeDropRateBumpDataForInstructor(offeredTimes: string[], instructorData: Record<string, EnrollmentBumpData>) {
+  const data: { x: string, y: number | null }[] = map(instructorData, (yearSemesterData, yearSemester) => {
 
     const { total_dropped, total_headcount } = yearSemesterData;
 
@@ -103,7 +105,15 @@ function computeDropRateBumpDataForInstructor(instructorData: Record<string, Enr
     }
   });
 
-  return sortBy(data, (datum) => datum.x)
+
+    for (const offeredTime of offeredTimes) {
+      if ( !some(data, { x: offeredTime})) {
+        data.push( { x: offeredTime, y: null } )
+      }
+    }
+
+
+  return sortBy(data, (datum) => datum.x);
 }
 
 
