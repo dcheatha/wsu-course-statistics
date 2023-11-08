@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Course, CourseEnrollmentByInstructorInfo, Courses } from "../data/models";
 import { fetchCourse } from "../data/dataFetch";
-import { Dictionary, chain, find, first, flatten, flattenDeep, forEach, fromPairs, groupBy, has, isNil, map, mapValues, merge, reduce, repeat, reverse, round, size, some, sortBy, times, truncate, union, uniq } from "lodash";
+import { Dictionary, chain, find, first, flatten, flattenDeep, forEach, fromPairs, groupBy, has, isNil, keys, map, mapValues, merge, nth, reduce, repeat, reverse, round, size, some, sortBy, times, truncate, union, uniq, values } from "lodash";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { CourseTable } from "../components/CourseTable";
 import { ResponsiveBoxPlot } from '@nivo/boxplot'
 import _ from "lodash";
 import { max, mean, median, min, standardDeviation } from "simple-statistics";
 import { ResponsiveStream } from "@nivo/stream";
+import { PaginationControl } from "react-bootstrap-pagination-control";
 
 
 export default function CourseOverviewPage()
@@ -29,16 +30,36 @@ export default function CourseOverviewPage()
 
     const title = first(courseData?.courses)?.title || "Loading...";
 
+    const [page, setPage] = useState(0)
+
+    const limitedCourseData = CourseDataInstructorLimiter(courseData, page);
+
+    const pagenationPages = map(limitedCourseData.pages, (pageName, idx) =>
+    {
+        const classNames = `page-item ${idx === page ? "active" : ""}`
+        return <li className={classNames}>
+            <a className="page-link" href="#" onClick={() => setPage(idx)}>{pageName}</a>
+        </li>
+    })
+
+    const pagenation = <nav>
+        <ul className="pagination justify-content-center">
+            {pagenationPages}
+        </ul>
+    </nav>
+
     return <div>
         <Breadcrumbs subject={subject} catalogNo={catalogNo}/>
         <h1>{subject} {catalogNo} — {title}</h1>
 
         <h2>Stats</h2>
 
+        {pagenation}
+
         <Tabs tabs={[
           {
             name: 'Grade Distrubution',
-            component: <GradesBoxPlot data={courseData}/>,
+            component: <GradesBoxPlot data={limitedCourseData.courseData}/>,
           },
           {
             name: 'Drop Rate',
@@ -46,13 +67,43 @@ export default function CourseOverviewPage()
           },
           {
             name: 'Instructor Allocation',
-            component: <PopulationSteamChart data={courseData}/>,
+            component: <PopulationSteamChart data={limitedCourseData.courseData}/>,
           }
         ]} />
 
         <h2>All Known Historical Offerings</h2>
-        { courseData && <CourseTable data={courseData} />}
+        { limitedCourseData.courseData && <CourseTable data={limitedCourseData.courseData} />}
     </div>
+}
+
+function CourseDataInstructorLimiter( courseData: Courses | null, page: number ): { courseData: Courses | null, pages: string[] }
+{
+    const instructors = uniq(map( courseData?.courses, (course) => course.instructor || 'Unknown'))
+
+    if ( size( instructors ) <= 10 || isNil(courseData) ) {
+        return {
+            courseData,
+            pages: [],
+        }
+    }
+
+    const courseDataYears = keys(groupBy(courseData?.courses, (courseGrade) => courseGrade.year))
+
+
+    const groupedCourseData = values(groupBy(courseData?.courses, (courseGrade) => courseGrade.year))
+    const groupedGradeData = values(groupBy(courseData?.stats.grades_by_instructor, (courseGrade) => courseGrade.year))
+
+    return {
+        courseData: {
+            ...courseData,
+            courses: groupedCourseData[page],
+            stats: {
+                ...courseData.stats,
+                grades_by_instructor: groupedGradeData[page],
+            }
+        },
+        pages: courseDataYears,
+    }
 }
 
 export interface Tab
