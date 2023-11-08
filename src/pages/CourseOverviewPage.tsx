@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Course, CourseEnrollmentByInstructorInfo, Courses } from "../data/models";
 import { fetchCourse } from "../data/dataFetch";
-import { Dictionary, first, forEach, groupBy, has, isNil, map, reverse, round, size, some, sortBy, union, uniq } from "lodash";
+import { Dictionary, chain, first, forEach, groupBy, has, isNil, map, reduce, reverse, round, size, some, sortBy, union, uniq } from "lodash";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { CourseTable } from "../components/CourseTable";
-import { ResponsiveBump } from "@nivo/bump";
+import { ResponsiveBoxPlot } from '@nivo/boxplot'
+import _ from "lodash";
+
 
 export default function CourseOverviewPage()
 {
@@ -40,7 +42,131 @@ export default function CourseOverviewPage()
 
 export function DropRateBump( props: { data: Courses | null })
 {
-   return <div style={{width: "100%", height: 600}}>
+  const groupedGrades = chain(props.data?.stats.grades_by_instructor)
+  .groupBy((courseGrade) => `${courseGrade.year}-${courseGrade.semester}`)
+  .mapValues(
+    (yearSemesterGroup) => chain(yearSemesterGroup)
+                            .groupBy('instructor')
+                            .map((data) => 
+                            {
+
+                              // @ts-ignore
+                            return chain(data)
+                                  .reduce((accumulator, cur) => {
+                              const nextValue = {
+                                ...accumulator,
+                                // @ts-ignore
+                                grades: accumulator && accumulator.grades || []
+                              }
+
+                              nextValue.grades.push({ headcount: cur.headcount, grade: cur.grade })
+                              return nextValue;
+                            })
+                            .omit([ 'grade', 'headcount' ])
+                            .value()
+                            })
+                            .value()
+  )
+  .value();
+
+    console.log('groupedGrades', groupedGrades);
+  return <div>
+    <ResponsiveBoxPlot
+        data={[]}
+        margin={{ top: 60, right: 140, bottom: 60, left: 60 }}
+        minValue={0}
+        maxValue={10}
+        subGroupBy="subgroup"
+        padding={0.12}
+        enableGridX={true}
+        axisTop={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: '',
+            legendOffset: 36
+        }}
+        axisRight={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: '',
+            legendOffset: 0
+        }}
+        axisBottom={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: 'group',
+            legendPosition: 'middle',
+            legendOffset: 32
+        }}
+        axisLeft={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: 'value',
+            legendPosition: 'middle',
+            legendOffset: -40
+        }}
+        colors={{ scheme: 'nivo' }}
+        borderRadius={2}
+        borderWidth={2}
+        borderColor={{
+            from: 'color',
+            modifiers: [
+                [
+                    'darker',
+                    0.3
+                ]
+            ]
+        }}
+        medianWidth={2}
+        medianColor={{
+            from: 'color',
+            modifiers: [
+                [
+                    'darker',
+                    0.3
+                ]
+            ]
+        }}
+        whiskerEndSize={0.6}
+        whiskerColor={{
+            from: 'color',
+            modifiers: [
+                [
+                    'darker',
+                    0.3
+                ]
+            ]
+        }}
+        motionConfig="stiff"
+        legends={[
+            {
+                anchor: 'right',
+                direction: 'column',
+                justify: false,
+                translateX: 100,
+                translateY: 0,
+                itemWidth: 60,
+                itemHeight: 20,
+                itemsSpacing: 3,
+                itemTextColor: '#999',
+                itemDirection: 'left-to-right',
+                symbolSize: 20,
+                symbolShape: 'square',
+                effects: [
+                    {
+                        on: 'hover',
+                        style: {
+                            itemTextColor: '#000'
+                        }
+                    }
+                ]
+            }
+        ]}
+    />
     </div>
 }
 
