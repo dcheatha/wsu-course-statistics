@@ -1,1 +1,1 @@
-declare module '@nivo/boxplot'
+declare module '@nivo/boxplot';

@@ -10,7 +10,7 @@ export default function Root() {
   return (
     <div>
       <Navbar setIsSearching={setIsSearching}/>
-      <div className="container">
+      <div className="container-fluid">
         {!isSearching && <Outlet/>}
       </div>
     </div>

@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Course, CourseEnrollmentByInstructorInfo, Courses } from "../data/models";
 import { fetchCourse } from "../data/dataFetch";
-import { Dictionary, chain, first, forEach, groupBy, has, isNil, map, reduce, reverse, round, size, some, sortBy, union, uniq } from "lodash";
+import { Dictionary, chain, first, flatten, flattenDeep, forEach, groupBy, has, isNil, map, reduce, repeat, reverse, round, size, some, sortBy, times, truncate, union, uniq } from "lodash";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { CourseTable } from "../components/CourseTable";
 import { ResponsiveBoxPlot } from '@nivo/boxplot'
 import _ from "lodash";
+import { max, mean, median, min, standardDeviation } from "simple-statistics";
 
 
 export default function CourseOverviewPage()
@@ -32,17 +33,19 @@ export default function CourseOverviewPage()
         <h1>{subject} {catalogNo} — {title}</h1>
 
         <h2>Stats</h2>
-        <h3>Drop Rate</h3>
-        <DropRateBump data={courseData}/>
+        <h3>Grade Distrubution</h3>
+        <div className="gradeBoxPlot">
+          <GradesBoxPlot data={courseData}/>
+        </div>
 
         <h2>All Known Historical Offerings</h2>
         { courseData && <CourseTable data={courseData} />}
     </div>
 }
 
-export function DropRateBump( props: { data: Courses | null })
+function groupGrades(data: Courses | null)
 {
-  const groupedGrades = chain(props.data?.stats.grades_by_instructor)
+  return chain(data?.stats.grades_by_instructor)
   .groupBy((courseGrade) => `${courseGrade.year}-${courseGrade.semester}`)
   .mapValues(
     (yearSemesterGroup) => chain(yearSemesterGroup)
@@ -59,7 +62,7 @@ export function DropRateBump( props: { data: Courses | null })
                                 grades: accumulator && accumulator.grades || []
                               }
 
-                              nextValue.grades.push({ headcount: cur.headcount, grade: cur.grade })
+                              nextValue.grades = [...nextValue.grades, ...times(cur.headcount, () => cur.grade)]
                               return nextValue;
                             })
                             .omit([ 'grade', 'headcount' ])
@@ -68,16 +71,48 @@ export function DropRateBump( props: { data: Courses | null })
                             .value()
   )
   .value();
+}
 
-    console.log('groupedGrades', groupedGrades);
-  return <div>
+export function GradesBoxPlot( props: { data: Courses | null })
+{
+  const statted = flattenDeep(map(groupGrades(props.data), (termData, term) => {
+    return map(termData, (courseOffering: any) => {
+        const grades = courseOffering && courseOffering.grades || [];
+
+        const n = size(grades);
+
+        if (n <= 0 ) {
+          return [];
+        }
+
+        const mu = mean(grades);
+        const sd = standardDeviation(grades);
+
+      return map(grades, (grade) => {
+        return {
+          group: term,
+          subgroup: courseOffering.instructor || "Unknown",
+          mu, sd, n,
+          value: grade,
+        }
+      })
+    })
+  }));
+
+  const margin = 25;
+
+  return <div style={{ width: '100%', height: 400 }}>
     <ResponsiveBoxPlot
-        data={[]}
-        margin={{ top: 60, right: 140, bottom: 60, left: 60 }}
+    theme={theme}
+        data={statted}
+        margin={{ top: margin, right: 160, bottom: margin, left: margin }}
+        quantiles={[0, 0.25, 0.5, 0.75, 1]}
         minValue={0}
-        maxValue={10}
+        layout="vertical"
+        maxValue={4}
         subGroupBy="subgroup"
-        padding={0.12}
+        padding={0}
+        innerPadding={0}
         enableGridX={true}
         axisTop={{
             tickSize: 5,
@@ -97,7 +132,6 @@ export function DropRateBump( props: { data: Courses | null })
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: 'group',
             legendPosition: 'middle',
             legendOffset: 32
         }}
@@ -105,7 +139,6 @@ export function DropRateBump( props: { data: Courses | null })
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: 'value',
             legendPosition: 'middle',
             legendOffset: -40
         }}
@@ -152,7 +185,7 @@ export function DropRateBump( props: { data: Courses | null })
                 itemWidth: 60,
                 itemHeight: 20,
                 itemsSpacing: 3,
-                itemTextColor: '#999',
+                itemTextColor: '#ffffff',
                 itemDirection: 'left-to-right',
                 symbolSize: 20,
                 symbolShape: 'square',
@@ -160,7 +193,7 @@ export function DropRateBump( props: { data: Courses | null })
                     {
                         on: 'hover',
                         style: {
-                            itemTextColor: '#000'
+                            itemTextColor: '#ffffff'
                         }
                     }
                 ]
@@ -170,40 +203,37 @@ export function DropRateBump( props: { data: Courses | null })
     </div>
 }
 
-
-
-
 const theme = {
-  "background": "#ffffff",
+  "background": "#212529",
   "text": {
       "fontSize": 11,
-      "fill": "#333333",
+      "fill": "#ffffff",
       "outlineWidth": 0,
       "outlineColor": "transparent"
   },
   "axis": {
       "domain": {
           "line": {
-              "stroke": "#777777",
+              "stroke": "#ffffff",
               "strokeWidth": 1
           }
       },
       "legend": {
           "text": {
               "fontSize": 12,
-              "fill": "#333333",
+              "fill": "#fffff",
               "outlineWidth": 0,
               "outlineColor": "transparent"
           }
       },
       "ticks": {
           "line": {
-              "stroke": "#777777",
+              "stroke": "#ffffff",
               "strokeWidth": 1
           },
           "text": {
               "fontSize": 11,
-              "fill": "#333333",
+              "fill": "#ffffff",
               "outlineWidth": 0,
               "outlineColor": "transparent"
           }
@@ -211,7 +241,7 @@ const theme = {
   },
   "grid": {
       "line": {
-          "stroke": "#dddddd",
+          "stroke": "#ffffff",
           "strokeWidth": 1
       }
   },
@@ -219,14 +249,14 @@ const theme = {
       "title": {
           "text": {
               "fontSize": 11,
-              "fill": "#333333",
+              "fill": "#ffffff",
               "outlineWidth": 0,
               "outlineColor": "transparent"
           }
       },
       "text": {
           "fontSize": 11,
-          "fill": "#333333",
+          "fill": "#ffffff",
           "outlineWidth": 0,
           "outlineColor": "transparent"
       },
@@ -234,7 +264,7 @@ const theme = {
           "line": {},
           "text": {
               "fontSize": 10,
-              "fill": "#333333",
+              "fill": "#ffffff",
               "outlineWidth": 0,
               "outlineColor": "transparent"
           }
@@ -271,7 +301,7 @@ const theme = {
   },
   "tooltip": {
       "container": {
-          "background": "#ffffff",
+          "background": "#000000",
           "fontSize": 12
       },
       "basic": {},

@@ -20,6 +20,7 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
+  "types": ["@types/node", "@nivo/boxplot", /* other types */],
   "include": [
     "src"
   ]
