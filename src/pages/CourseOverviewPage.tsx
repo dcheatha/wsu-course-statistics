@@ -6,7 +6,7 @@ import { first } from "lodash";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { CourseTable } from "../components/CourseTable";
 import { CourseDataInstructorLimiter } from "../util";
-import { PopulationSteamChart } from "../components/PopulationSteamChart";
+import { InstructorAllocationBarChart } from "../components/InstructorAllocationBarChart";
 import { GradesBoxPlot } from "../components/GradesBoxPlot";
 import { Pagination } from "../components/Pagination";
 import { Tabs } from "../components/Tabs";
@@ -50,12 +50,8 @@ export default function CourseOverviewPage()
             component: <GradesBoxPlot data={limitedCourseData.courseData}/>,
           },
           {
-            name: 'Drop Rate',
-            component: <div>Todo</div>,
-          },
-          {
             name: 'Instructor Allocation',
-            component: <PopulationSteamChart data={limitedCourseData.courseData}/>,
+            component: <InstructorAllocationBarChart data={limitedCourseData.courseData}/>,
           }
         ]} />
 

@@ -5,7 +5,7 @@ import { groupGrades } from "../util";
 import { theme } from "../util/theme";
 
 
-export function PopulationSteamChart(props: { data: Courses | null; }) {
+export function InstructorAllocationBarChart(props: { data: Courses | null; }) {
     const instructors = uniq(map(props.data?.courses, (course) => course.instructor || 'Unknown'));
 
     let data = map(groupGrades(props.data), (termData, term) => {
