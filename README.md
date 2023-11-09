@@ -5,9 +5,9 @@ Disclaimer: I wrote this very fast and it's sloppy, non-peer-reviewed code. If y
 ## Screenshots
 
 ![main page](./readme/main_page.png)
-![subject page](./readme/subject.png)
+![subject page](./readme/subject_page.png)
 ![grade dist](./readme/course_page_grade_dist.png)
-![instructor alloc](./readme/course_page_course_page_instructor_alloc.png)
+![instructor alloc](./readme/course_page_instructor_alloc.png)
 
 ## Formatting
 
