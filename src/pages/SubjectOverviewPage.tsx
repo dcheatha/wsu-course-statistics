@@ -26,7 +26,7 @@ export default function SubjectOverviewPage()
 
   const treeMapData =  map( subjectCourseData?.courses, (item) => { 
     return { 
-      id: `${item.catalog_no} ${first(item.titles)}`,
+      id: `${item.catalog_no} ${first(item.titles)?.replace("/", "")}`,
       value: item.total_headcount || 0} 
     }
   )
