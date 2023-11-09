@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function Root() {
   return (
     <div>
-      <Navbar />
+              <Navbar />
       <div className="container-fluid">
         <Outlet />
       </div>
