@@ -8,20 +8,20 @@ import CourseOverviewPage from "../pages/CourseOverviewPage";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root/>,
+    element: <Root />,
     children: [
       {
         path: "/",
-        element: <AllSubjectsPage/>
+        element: <AllSubjectsPage />,
       },
       {
         path: "/subject/:subject",
-        element: <SubjectOverviewPage/>
+        element: <SubjectOverviewPage />,
       },
       {
         path: "/course/:subject/:catalogNo",
-        element: <CourseOverviewPage/>
-      }
-    ]
+        element: <CourseOverviewPage />,
+      },
+    ],
   },
 ]);

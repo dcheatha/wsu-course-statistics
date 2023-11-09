@@ -1,17 +1,15 @@
-import { map, size } from 'lodash';
-import { CourseSearchItem } from '../data/models';
-import { Link } from 'react-router-dom';
+import { map, size } from "lodash";
+import { CourseSearchItem } from "../data/models";
+import { Link } from "react-router-dom";
 
-
-export function CourseSearchTable(props: { data: CourseSearchItem[]; }) {
+export function CourseSearchTable(props: { data: CourseSearchItem[] }) {
   let rows = map(props.data, (item, index) => (
     <CourseSearchRow key={index} item={item} />
   ));
-  
+
   return (
     <div>
-      Search Results (n = {size( rows ) || 0})
-
+      Search Results (n = {size(rows) || 0})
       <table className="table table-striped table-bordered">
         <thead>
           <tr>
@@ -21,22 +19,18 @@ export function CourseSearchTable(props: { data: CourseSearchItem[]; }) {
             <th>Total Headcount</th>
           </tr>
         </thead>
-        <tbody>
-          {rows}
-        </tbody>
+        <tbody>{rows}</tbody>
       </table>
     </div>
   );
 }
 
-export function CourseSearchRow(props: { item: CourseSearchItem; }) {
+export function CourseSearchRow(props: { item: CourseSearchItem }) {
   const { item } = props;
   return (
     <tr data-bs-toggle="modal" data-bs-target="#searchModal">
       <td>
-        <Link to={`/subject/${item.subject}`}>
-          {item.subject}
-        </Link>
+        <Link to={`/subject/${item.subject}`}>{item.subject}</Link>
       </td>
       <td>
         <Link to={`/course/${item.subject}/${item.catalog_no}`}>
@@ -45,11 +39,10 @@ export function CourseSearchRow(props: { item: CourseSearchItem; }) {
       </td>
       <td>
         <Link to={`/course/${item.subject}/${item.catalog_no}`}>
-          {item.title || 'N/A'}
+          {item.title || "N/A"}
         </Link>
       </td>
-      <td>{item.total_headcount || 'N/A'}</td>
+      <td>{item.total_headcount || "N/A"}</td>
     </tr>
   );
 }
-

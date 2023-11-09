@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { join, map, round } from 'lodash';
-import { Subjects } from '../data/models';
-import { fetchAllSubjects } from '../data/dataFetch';
-import { Subject } from '../data/models';
-import { Link } from 'react-router-dom';
-import { dropRate } from '../util';
+import React, { useState, useEffect } from "react";
+import { join, map, round } from "lodash";
+import { Subjects } from "../data/models";
+import { fetchAllSubjects } from "../data/dataFetch";
+import { Subject } from "../data/models";
+import { Link } from "react-router-dom";
+import { dropRate } from "../util";
 
 export interface AllSubjectsProps {
   data: Subjects | null;
 }
 
-export function AllSubjectsTable( props: AllSubjectsProps ) {
-  const rows = map(props.data?.items, (item) => <AllSubjectsRow subject={item} />);
+export function AllSubjectsTable(props: AllSubjectsProps) {
+  const rows = map(props.data?.items, (item) => (
+    <AllSubjectsRow subject={item} />
+  ));
 
   return (
     <table className="table table-striped table-bordered">
@@ -25,22 +27,18 @@ export function AllSubjectsTable( props: AllSubjectsProps ) {
           <th scope="col">Campuses</th>
         </tr>
       </thead>
-      <tbody>
-        {rows}
-      </tbody>
+      <tbody>{rows}</tbody>
     </table>
   );
 }
 
-export function AllSubjectsRow(props: { subject: Subject; }) {
+export function AllSubjectsRow(props: { subject: Subject }) {
   const { subject } = props;
 
   return (
     <tr>
       <td>
-        <Link to={`/subject/${subject.subject}`}>
-          {subject.subject}
-        </Link>
+        <Link to={`/subject/${subject.subject}`}>{subject.subject}</Link>
       </td>
       <td>{subject.courses_offered}</td>
       <td>{subject.total_headcount}</td>
@@ -50,4 +48,3 @@ export function AllSubjectsRow(props: { subject: Subject; }) {
     </tr>
   );
 }
-
