@@ -1,23 +1,18 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useRef } from 'react';
 import { CourseSearch } from '../data/models';
 import { fetchSearch } from '../data/dataFetch';
 import { CourseSearchTable } from './CourseSearchTable';
 import { size } from 'lodash';
 import logo from '../logo.png'
+import { SearchModal } from './SearchModal';
 
-export interface NavbarProps
-{
-  setIsSearching: (isSearching: boolean) => void;
-}
-
-export function Navbar( props: NavbarProps ) {
+export function Navbar( props: {} ) {
   const [searchData, setSearchData] = useState<CourseSearch | null>(null);
   const [searchText, setSearchText] = useState<string>("");
 
   const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
     setSearchText(text);
-    props.setIsSearching(size(text) > 0)
     setSearchData(await fetchSearch(text));
   };
 
@@ -35,18 +30,29 @@ export function Navbar( props: NavbarProps ) {
         </a>
           <form className="d-flex" role="search">
             <input
+              data-bs-toggle="modal" 
+              data-bs-target="#searchModal"
               className="form-control me-2"
-              type="search"
               placeholder="Search"
-              aria-label="Search"
               value={searchText}
-              onChange={handleInputChange} />
+              onChange={handleInputChange}
+              />
           </form>
         </div>
       </nav>
 
 
-      <CourseSearchTable data={searchData?.courses || []} />
+      <SearchModal>
+          <input
+            className="form-control me-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+            value={searchText}
+            onChange={handleInputChange}
+          />
+        <CourseSearchTable data={searchData?.courses || []} />
+      </SearchModal>
     </>
   );
 }

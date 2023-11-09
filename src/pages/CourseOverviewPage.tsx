@@ -28,7 +28,7 @@ export default function CourseOverviewPage()
         }
 
         fetchData();
-    }, []);
+    }, [subject, catalogNo]);
 
     const title = first(courseData?.courses)?.title || "Loading...";
 

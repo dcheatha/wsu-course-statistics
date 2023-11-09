@@ -8,10 +8,6 @@ export function CourseSearchTable(props: { data: CourseSearchItem[]; }) {
     <CourseSearchRow key={index} item={item} />
   ));
   
-  if ( size( rows ) <= 0 ) {
-    return null;
-  }
-
   return (
     <div>
       Search Results (n = {size( rows ) || 0})
@@ -36,7 +32,7 @@ export function CourseSearchTable(props: { data: CourseSearchItem[]; }) {
 export function CourseSearchRow(props: { item: CourseSearchItem; }) {
   const { item } = props;
   return (
-    <tr>
+    <tr data-bs-toggle="modal" data-bs-target="#searchModal">
       <td>
         <Link to={`/subject/${item.subject}`}>
           {item.subject}

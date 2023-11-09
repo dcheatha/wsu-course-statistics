@@ -21,7 +21,7 @@ export default function SubjectOverviewPage()
         }
 
         fetchData();
-    }, []);
+    }, [subject]);
 
 
   const treeMapData =  map( subjectCourseData?.courses, (item) => { 
